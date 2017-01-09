@@ -12,9 +12,9 @@ namespace DSharpPlus.Commands
 
         internal CommandConfig config { get; set; }
 
-        public DiscordClient Client { get; set; }
+        public DiscordClient Client { get; internal set; }
 
-        List<Command> _commands = new List<Command>();
+        public List<CommandGroup> Groups { get; internal set; } = new List<CommandGroup>();
 
         public CommandModule()
         {
@@ -36,33 +36,46 @@ namespace DSharpPlus.Commands
 
             Client.MessageCreated += (sender, e) =>
             {
-                if (((e.Message.Author.ID != Client.Me.ID && !config.SelfBot) || (e.Message.Author.ID == Client.Me.ID && config.SelfBot))
-                        && e.Message.Content.StartsWith(config.Prefix))
-                {
-                    string[] split = e.Message.Content.Split(new char[] { ' ' });
-                    string cmdName = split[0].Substring(config.Prefix.Length);
-
-                    foreach (Command command in _commands)
-                    {
-                        if (command.Name == cmdName)
-                        {
-                            command.Execute(new CommandEventArgs(e.Message, command));
-                        }
-                    }
-                }
+                // TODO
             };
         }
 
-        public Command AddCommand(string command, Func<CommandEventArgs, Task> Do)
+        public void AddCommands(CommandGroup Commands)
         {
-            Command cmd = new Command(command, Do);
-            _commands.Add(cmd);
+            if (Commands.GetType() == typeof(CommandGroup))
+            {
+                Client.DebugLogger.LogMessage(LogLevel.Error, "Command", $"You cant add the CommandGroup", DateTime.Now);
+                return;
+            }
 
-            Client.DebugLogger.LogMessage(LogLevel.Debug, "Command", $"Command added {command}", DateTime.Now);
+            Groups.Add(Commands);
+            string GroupPrefix = "";
+            Type group = Commands.GetType();
+            foreach (var attribute in group.GetCustomAttributes(true))
+            {
+                Client.DebugLogger.LogMessage(LogLevel.Debug, "Command", $"Class Attribute: {attribute.GetType().Name}", DateTime.Now);
+                if (attribute.GetType() == typeof(GroupAttribute))
+                {
+                    GroupPrefix = ((GroupAttribute)attribute).Group.Trim() + " ";
+                    break;
+                }
+            }
+            foreach (var method in group.GetMethods())
+            {
+                if (method.GetCustomAttributes(true).Count(x => x.GetType() == typeof(CommandAttribute)) == 0)
+                    continue;
 
-            return cmd;
+                Command cmd = new Command();
+                cmd.MappedName += GroupPrefix;
+                if (method.GetCustomAttributes(true).Count(x => x.GetType() == typeof(GroupAttribute)) > 0)
+                    cmd.MappedName += (method.GetCustomAttributes(true).First(x => x.GetType() == typeof(GroupAttribute)) as GroupAttribute).Group.Trim() + " ";
+                cmd.MappedName += method.Name;
+
+                Client.DebugLogger.LogMessage(LogLevel.Debug, "Command", $"Found Command: \"{cmd.MappedName}\"", DateTime.Now);
+
+                method.Invoke(Commands, new object[] { "" });
+                method.Invoke(Commands, new object[] { "optional parameter test" });
+            }
         }
-
-        public Command AddCommand(string command, Action<CommandEventArgs> Do) => AddCommand(command, (x) => { Do(x); return Task.Delay(0); });
     }
 }

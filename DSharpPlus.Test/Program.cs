@@ -38,35 +38,8 @@ namespace DSharpPlus.Test
                 Prefix = "!",
                 SelfBot = false
             });
-            client.AddCommand("test", async (x) =>
-            {
-                await x.Message.Parent.SendMessage("boi");
-            });
 
-            client.AddCommand("testerino", async (x) =>
-            {
-                await client.SendMessage(x.Message.ChannelID, "ye works");
-                await client.SendMessage(x.Message.ChannelID, $@"```
-Servername: {x.Message.Parent.Parent.Name}
-Serverowner: {x.Message.Parent.Parent.OwnerID}
-```");
-            });
-
-            client.AddCommand("kill", async (x) =>
-            {
-                await x.Message.Respond($"Cya o/");
-
-                client.Dispose();
-                await Task.Delay(-1);
-            });
-
-
-            client.AddCommand("clearChannel", async (x) =>
-            {
-                List<ulong> ids = (await x.Message.Parent.GetMessages(before: x.Message.ID, limit: 50)).Select(y => y.ID).ToList();
-                await x.Message.Parent.BulkDeleteMessages(ids);
-                await x.Message.Respond($"Removed ``{ids.Count}`` messages");
-            });
+            client.AddCommands(new Commands.BaseCommands());
 
             client.Ready += (sender, e) =>
             {

@@ -40,10 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command.cs" />
+    <Compile Include="Command\Command.cs" />
+    <Compile Include="Command\CommandAttributes.cs" />
+    <Compile Include="Command\CommandEnvironment.cs" />
     <Compile Include="CommandConfig.cs" />
     <Compile Include="CommandExtension.cs" />
     <Compile Include="CommandModule.cs" />
+    <Compile Include="Command\CommandGroup.cs" />
     <Compile Include="EventArgs\CommandEventArgs.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

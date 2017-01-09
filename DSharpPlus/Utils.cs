@@ -92,6 +92,8 @@ namespace DSharpPlus
 
         public static List<ulong> GetUserMentions(DiscordMessage message)
         {
+            if (!ContainsUserMentions(message.Content)) return new List<ulong>();
+
             List<ulong> result = new List<ulong>();
 
             string pattern = @"<@(\d+)>";
@@ -117,6 +119,8 @@ namespace DSharpPlus
 
         public static List<ulong> GetRoleMentions(DiscordMessage message)
         {
+            if (!ContainsRoleMentions(message.Content)) return new List<ulong>();
+            
             List<ulong> result = new List<ulong>();
 
             string pattern = @"<@&(\d+)>";
@@ -133,6 +137,8 @@ namespace DSharpPlus
 
         public static List<ulong> GetChannelMentions(DiscordMessage message)
         {
+            if (!ContainsChannelMentions(message.Content)) return new List<ulong>();
+
             List<ulong> result = new List<ulong>();
 
             string pattern = @"<#(\d+)>";
@@ -149,6 +155,8 @@ namespace DSharpPlus
 
         public static List<ulong> GetEmojis(DiscordMessage message)
         {
+            if (!ContainsEmojis(message.Content)) return new List<ulong>();
+
             List<ulong> result = new List<ulong>();
 
             string pattern = @"<:(.*):(\d+)>";

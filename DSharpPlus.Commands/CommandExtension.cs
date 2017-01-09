@@ -27,8 +27,6 @@ namespace DSharpPlus.Commands
             return client.GetModule<CommandModule>();
         }
 
-        public static Command AddCommand(this DiscordClient client, string command, Func<CommandEventArgs, Task> Do) => client.GetCommandModule().AddCommand(command, Do);
-
-        public static Command AddCommand(this DiscordClient client, string command, Action<CommandEventArgs> Do) => client.GetCommandModule().AddCommand(command, Do);
+        public static void AddCommands(this DiscordClient client, CommandGroup Commands) => client.GetCommandModule().AddCommands(Commands);
     }
 }

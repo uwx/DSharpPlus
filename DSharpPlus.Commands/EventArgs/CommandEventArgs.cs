@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DSharpPlus.Commands
 {
-    public class CommandEventArgs : EventArgs
+    /*public class CommandEventArgs : EventArgs
     {
         public DiscordMessage Message { get; }
         public Command Command { get; }
@@ -22,5 +22,5 @@ namespace DSharpPlus.Commands
                 Arguments = args.Split(new char[] { ' ' });
             }
         }
-    }
+    }*/
 }
