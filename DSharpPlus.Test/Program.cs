@@ -163,6 +163,34 @@ Serverowner: {e.Message.Parent.Parent.OwnerID}
 
                     await e.Message.Respond(info);
                 }
+                if(e.Message.Content == "!!exception")
+                {
+                    try
+                    {
+                        await e.Message.Respond("");
+                    }catch(BadRequestException ex)
+                    {
+                        Console.WriteLine(ex.WebResponse.ResponseCode + ": " + ex.JsonMessage);
+                    }
+                }
+                if(e.Message.Content == "!!heck")
+                {
+                    List<DiscordMember> mems = await client.InternalListGuildMembers(e.Guild.ID, 1000, 0);
+                    string memes = "";
+                    foreach(DiscordMember m in mems)
+                    {
+                        memes += $"{m.User.Username}#{m.User.Discriminator}: (nick: {m.Nickname})\n";
+                    }
+                    await e.Message.Respond(memes);
+                }
+            };
+
+            // This was an example I made for someone, but might be nice to keep this in for people who sniff out test code instead of docs :^)
+            client.GuildBanAdd += async (sender, e) =>
+            {
+                List<DiscordChannel> c = e.Guild.Channels.FindAll(x => x.Name.Contains("logs"));
+                if (c.Count > 0)
+                    await c[0].SendMessage($"User Banned: {e.User.Username}#{e.User.Discriminator}");
             };
 
             client.GuildAvailable += (sender, e) =>

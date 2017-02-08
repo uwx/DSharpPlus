@@ -4,6 +4,10 @@ Represents a Guild
 
 ## Members
 
+`ulong ID`: ID for this object
+
+`DateTime CreationDate`: When this was created
+
 `string Name`: Guild Name
 
 `string Icon`: Icon Hash
@@ -239,3 +243,12 @@ Returns: Nothing
 Gets guild's Channels
 
 Returns: `List<DiscordChannel>`
+
+#### ListMembers
+Gets guild's Members
+
+`int limit`: Limit of members to return
+
+`int after`: Index to begin from
+
+Returns: `List<DiscordMember>`
