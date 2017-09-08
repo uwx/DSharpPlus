@@ -1,48 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <TargetFrameworks>net45;net46;net47</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <RootNamespace>DSharpPlus</RootNamespace>
-    <PackageId>DSharpPlus.WebSocket.WebSocket4Net</PackageId>
-    <Authors>Naamloos, afroraydude, DrCreo, Death, Axiom, Emzi0767, and contributors</Authors>
-    <Company>DSharpPlus developers</Company>
-    <Description>NOTE: This is an optional package. Do not install, unless you're targeting .NETFX on Windows 7.
-
-A WebSocket4Net WebSocket client for DSharpPlus, for platforms that do not support native .NET WebSockets, such as Windows 7 or Mono.</Description>
-    <PackageLicenseUrl>https://github.com/NaamloosDT/DSharpPlus/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/NaamloosDT/DSharpPlus/master/logo/dsharpplus.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/NaamloosDT/DSharpPlus</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/NaamloosDT/DSharpPlus</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageTags>Discord, Discord API, Bots, Discord Bots, Chat, DSharp, DSharpPlus, C#, .NET, VB.NET, VB, F#, WebSocket, WebSocket4Net, Windows, Windows 7</PackageTags>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CDAD28A7-8C88-4932-85C8-868DCA0D9B7A}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DSharpPlus.WebSocket.WebSocket4Net</RootNamespace>
+    <AssemblyName>DSharpPlus.WebSocket.WebSocket4Net</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' != ''">
-    <Version>3.0.1-beta-$(VersionSuffix)</Version>
-    <AssemblyVersion>3.0.1.$(VersionSuffix)</AssemblyVersion>
-    <FileVersion>3.0.1.$(VersionSuffix)</FileVersion>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' == ''">
-    <Version>3.0.1</Version>
-    <AssemblyVersion>3.0.1.0</AssemblyVersion>
-    <FileVersion>3.0.1.0</FileVersion>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="WebSocket4Net" Version="0.14.1" />
+    <Reference Include="SuperSocket.ClientEngine, Version=0.8.0.13, Culture=neutral, PublicKeyToken=ee9af13f57f00acc">
+      <HintPath>..\..\packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a">
+      <HintPath>..\..\packages\WebSocket4Net.0.15.0\lib\net45\WebSocket4Net.dll</HintPath>
+    </Reference>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\DSharpPlus\DSharpPlus.csproj" />
+    <Compile Include="WebSocket4NetClient.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DSharpPlus\DSharpPlus.csproj">
+      <Project>{7af7ac17-84b7-41ba-b79d-284c0f9cc90d}</Project>
+      <Name>DSharpPlus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>
