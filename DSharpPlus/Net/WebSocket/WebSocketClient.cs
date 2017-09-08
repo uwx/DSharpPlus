@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NOWS
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.IO.Compression;
@@ -284,10 +285,11 @@ namespace DSharpPlus.Net.WebSocket
 
         private void EventErrorHandler(string evname, Exception ex)
         {
-            if (evname.ToLowerInvariant() == "ws_error")
+            if (evname.ToLower() == "ws_error")
                 Console.WriteLine($"WSERROR: {ex.GetType()} in {evname}!");
             else
                 this._on_error.InvokeAsync(new SocketErrorEventArgs(null) { Exception = ex }).GetAwaiter().GetResult();
         }
     }
 }
+#endif

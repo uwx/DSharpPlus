@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NOUDP
+using System;
 using System.Threading.Tasks;
 
 namespace DSharpPlus.Net.Udp
@@ -33,3 +34,4 @@ namespace DSharpPlus.Net.Udp
         }
     }
 }
+#endif

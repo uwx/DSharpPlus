@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿#if !NOUDP
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace DSharpPlus.Net.Udp
@@ -39,3 +40,4 @@ namespace DSharpPlus.Net.Udp
         }
     }
 }
+#endif

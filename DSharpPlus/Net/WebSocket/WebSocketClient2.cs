@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NOWS
+using System;
 using System.Threading.Tasks;
 using DSharpPlus.EventArgs;
 
@@ -93,3 +94,4 @@ namespace DSharpPlus.Net.WebSocket
         }
     }
 }
+#endif
