@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -130,7 +129,7 @@ namespace DSharpPlus.Net
                         wait = wait.ContinueWith(t => this.ExecuteRequestAsync(request));
                         if (global)
                         {
-                            request.Discord.DebugLogger.LogMessage(LogLevel.Error, "REST", "Global ratelimit hit, cooling down", DateTime.Now);
+                            request.Discord.DebugLogger.LogMessage(LogLevel.Error, "REST", $"Global ratelimit hit, cooling down", DateTime.Now);
                             await wait;
                         }
                         else
@@ -179,7 +178,7 @@ namespace DSharpPlus.Net
                 {
                     var i = 1;
                     foreach (var f in mprequest.Files)
-                        content.Add(new StreamContent(f.Value), $"file{(i++).ToString(CultureInfo.InvariantCulture)}", f.Key);
+                        content.Add(new StreamContent(f.Value), $"file{i++}", f.Key);
                 }
 
                 req.Content = content;
@@ -198,12 +197,12 @@ namespace DSharpPlus.Net
             var hs = response.Headers;
 
             // check if global b1nzy
-            if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLowerInvariant() == "true")
+            if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLower() == "true")
             {
                 // global
 
                 hs.TryGetValue("Retry-After", out var retry_after_raw);
-                var retry_after = int.Parse(retry_after_raw, CultureInfo.InvariantCulture);
+                var retry_after = int.Parse(retry_after_raw);
 
                 // handle the wait
                 wait_task = Task.Delay(retry_after);
@@ -220,7 +219,7 @@ namespace DSharpPlus.Net
 
             var bucket = request.RateLimitBucket;
 
-            if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLowerInvariant() == "true")
+            if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLower() == "true")
                 return;
 
             var r1 = hs.TryGetValue("X-RateLimit-Limit", out var usesmax);
@@ -233,14 +232,14 @@ namespace DSharpPlus.Net
             var clienttime = DateTimeOffset.UtcNow;
             var servertime = clienttime;
             if (hs.TryGetValue("Date", out var raw_date))
-                servertime = DateTimeOffset.Parse(raw_date, CultureInfo.InvariantCulture).ToUniversalTime();
+                servertime = DateTimeOffset.Parse(raw_date).ToUniversalTime();
 
             var difference = clienttime.Subtract(servertime);
-            request.Discord.DebugLogger.LogMessage(LogLevel.Debug, "REST", $"Difference between machine and server time: {difference.TotalMilliseconds.ToString("#,##0.00", CultureInfo.InvariantCulture)}ms", DateTime.Now);
+            request.Discord.DebugLogger.LogMessage(LogLevel.Debug, "REST", $"Difference between machine and server time: {difference.TotalMilliseconds.ToString("#,##0.00")}ms", DateTime.Now);
 
-            bucket.Maximum = int.Parse(usesmax, CultureInfo.InvariantCulture);
-            bucket.Remaining = int.Parse(usesleft, CultureInfo.InvariantCulture);
-            bucket.Reset = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(long.Parse(reset, CultureInfo.InvariantCulture) + difference.TotalSeconds);
+            bucket.Maximum = int.Parse(usesmax);
+            bucket.Remaining = int.Parse(usesleft);
+            bucket.Reset = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(long.Parse(reset) + difference.TotalSeconds);
         }
     }
 }

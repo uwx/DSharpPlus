@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace DSharpPlus.Entities
         /// Gets the guild icon's url.
         /// </summary>
         [JsonIgnore]
-        public string IconUrl => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{IconHash}.jpg" : null;
+        public string IconUrl => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/icons/{this.Id}/{IconHash}.jpg" : null;
 
         /// <summary>
         /// Gets the guild splash's hash.
@@ -44,7 +43,7 @@ namespace DSharpPlus.Entities
         /// Gets the guild splash's url.
         /// </summary>
         [JsonIgnore]
-        public string SplashUrl => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"https://cdn.discordapp.com/splashes/{this.Id.ToString(CultureInfo.InvariantCulture)}/{SplashHash}.jpg" : null;
+        public string SplashUrl => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"https://cdn.discordapp.com/splashes/{this.Id}/{SplashHash}.jpg" : null;
 
         /// <summary>
         /// Gets the ID of the guild's owner.
@@ -645,7 +644,7 @@ namespace DSharpPlus.Entities
                 .GroupBy(xh => xh.Id)
                 .Select(xgh => xgh.First());
 
-            var ams = amr.Select(xau => gms.ContainsKey(xau.Id) ? gms[xau.Id] : new DiscordMember { Discord = this.Discord, Username = xau.Username, DiscriminatorInt = int.Parse(xau.Discriminator, CultureInfo.InvariantCulture), Id = xau.Id, _guild_id = this.Id });
+            var ams = amr.Select(xau => gms.ContainsKey(xau.Id) ? gms[xau.Id] : new DiscordMember { Discord = this.Discord, Username = xau.Username, DiscriminatorInt = int.Parse(xau.Discriminator), Id = xau.Id, _guild_id = this.Id });
             var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
             Dictionary<ulong, DiscordWebhook> ahd = null;
@@ -677,7 +676,7 @@ namespace DSharpPlus.Entities
                         var entrygld = entry as DiscordAuditLogGuildEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "name":
                                     entrygld.NameChange = new PropertyChange<string>
@@ -712,8 +711,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "afk_channel_id":
-                                    ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    ulong.TryParse(xc.NewValue as string, out t1);
+                                    ulong.TryParse(xc.OldValue as string, out t2);
 
                                     entrygld.AfkChannelChange = new PropertyChange<DiscordChannel>
                                     {
@@ -723,8 +722,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "widget_channel_id":
-                                    ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    ulong.TryParse(xc.NewValue as string, out t1);
+                                    ulong.TryParse(xc.OldValue as string, out t2);
 
                                     entrygld.EmbedChannelChange = new PropertyChange<DiscordChannel>
                                     {
@@ -759,7 +758,7 @@ namespace DSharpPlus.Entities
                         var entrychn = entry as DiscordAuditLogChannelEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "name":
                                     entrychn.NameChange = new PropertyChange<string>
@@ -770,8 +769,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "type":
-                                    p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.NewValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.OldValue as string, out t2);
 
                                     entrychn.TypeChange = new PropertyChange<ChannelType?>
                                     {
@@ -823,11 +822,11 @@ namespace DSharpPlus.Entities
                         var entryovr = entry as DiscordAuditLogOverwriteEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "deny":
-                                    p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.OldValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.OldValue as string, out t2);
 
                                     entryovr.DenyChange = new PropertyChange<Permissions?>
                                     {
@@ -837,8 +836,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "allow":
-                                    p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.OldValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.OldValue as string, out t2);
 
                                     entryovr.AllowChange = new PropertyChange<Permissions?>
                                     {
@@ -856,8 +855,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "id":
-                                    p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.OldValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.NewValue as string, out t2);
 
                                     entryovr.TargetIdChange = new PropertyChange<ulong?>
                                     {
@@ -906,7 +905,7 @@ namespace DSharpPlus.Entities
                         var entrymbu = entry as DiscordAuditLogMemberUpdateEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "nick":
                                     entrymbu.NicknameChange = new PropertyChange<string>
@@ -958,7 +957,7 @@ namespace DSharpPlus.Entities
                         var entryrol = entry as DiscordAuditLogRoleUpdateEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "name":
                                     entryrol.NameChange = new PropertyChange<string>
@@ -969,8 +968,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "color":
-                                    p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-                                    p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+                                    p1 = int.TryParse(xc.OldValue as string, out t3);
+                                    p2 = int.TryParse(xc.NewValue as string, out t4);
 
                                     entryrol.ColorChange = new PropertyChange<int?>
                                     {
@@ -1033,11 +1032,11 @@ namespace DSharpPlus.Entities
                         var entryinv = entry as DiscordAuditLogInviteEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "max_age":
-                                    p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-                                    p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+                                    p1 = int.TryParse(xc.OldValue as string, out t3);
+                                    p2 = int.TryParse(xc.OldValue as string, out t4);
 
                                     entryinv.MaxAgeChange = new PropertyChange<int?>
                                     {
@@ -1065,8 +1064,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "inviter_id":
-                                    p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.OldValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.NewValue as string, out t2);
 
                                     entryinv.InviterChange = new PropertyChange<DiscordMember>
                                     {
@@ -1076,8 +1075,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "channel_id":
-                                    p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.OldValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.NewValue as string, out t2);
 
                                     entryinv.ChannelChange = new PropertyChange<DiscordChannel>
                                     {
@@ -1097,8 +1096,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "uses":
-                                    p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-                                    p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+                                    p1 = int.TryParse(xc.OldValue as string, out t3);
+                                    p2 = int.TryParse(xc.OldValue as string, out t4);
 
                                     entryinv.UsesChange = new PropertyChange<int?>
                                     {
@@ -1108,8 +1107,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "max_uses":
-                                    p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-                                    p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+                                    p1 = int.TryParse(xc.OldValue as string, out t3);
+                                    p2 = int.TryParse(xc.OldValue as string, out t4);
 
                                     entryinv.MaxUsesChange = new PropertyChange<int?>
                                     {
@@ -1138,7 +1137,7 @@ namespace DSharpPlus.Entities
                         var entrywhk = entry as DiscordAuditLogWebhookEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "name":
                                     entrywhk.NameChange = new PropertyChange<string>
@@ -1149,8 +1148,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "channel_id":
-                                    p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = ulong.TryParse(xc.OldValue as string, out t1);
+                                    p2 = ulong.TryParse(xc.NewValue as string, out t2);
 
                                     entrywhk.ChannelChange = new PropertyChange<DiscordChannel>
                                     {
@@ -1160,8 +1159,8 @@ namespace DSharpPlus.Entities
                                     break;
 
                                 case "type": // ???
-                                    p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-                                    p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+                                    p1 = int.TryParse(xc.OldValue as string, out t3);
+                                    p2 = int.TryParse(xc.NewValue as string, out t4);
 
                                     entrywhk.TypeChange = new PropertyChange<int?>
                                     {
@@ -1173,8 +1172,8 @@ namespace DSharpPlus.Entities
                                 case "avatar_hash":
                                     entrywhk.AvatarChange = new PropertyChange<string>
                                     {
-                                        Before = xc.OldValueString != null ? $"https://cdn.discordapp.com/splashes/{entrywhk.Target.Id.ToString(CultureInfo.InvariantCulture)}/{xc.OldValueString}.png?size=1024" : null,
-                                        After = xc.NewValueString != null ? $"https://cdn.discordapp.com/splashes/{entrywhk.Target.Id.ToString(CultureInfo.InvariantCulture)}/{xc.NewValueString}.png?size=1024" : null
+                                        Before = xc.OldValueString != null ? $"https://cdn.discordapp.com/splashes/{entrywhk.Target.Id}/{xc.OldValueString}.png?size=1024" : null,
+                                        After = xc.NewValueString != null ? $"https://cdn.discordapp.com/splashes/{entrywhk.Target.Id}/{xc.NewValueString}.png?size=1024" : null
                                     };
                                     break;
 
@@ -1196,7 +1195,7 @@ namespace DSharpPlus.Entities
                         var entryemo = entry as DiscordAuditLogEmojiEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
+                            switch (xc.Key.ToLower())
                             {
                                 case "name":
                                     entryemo.NameChange = new PropertyChange<string>
@@ -1233,7 +1232,7 @@ namespace DSharpPlus.Entities
                         break;
 
                     default:
-                        this.Discord.DebugLogger.LogMessage(LogLevel.Warning, "DSharpPlus", $"Unknown audit log action type: {((int)xac.ActionType).ToString(CultureInfo.InvariantCulture)}; this should be reported to devs", DateTime.Now);
+                        this.Discord.DebugLogger.LogMessage(LogLevel.Warning, "DSharpPlus", $"Unknown audit log action type: {(int)xac.ActionType}; this should be reported to devs", DateTime.Now);
                         break;
                 }
 

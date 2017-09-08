@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using DSharpPlus.Entities;
 
@@ -11,31 +10,31 @@ namespace DSharpPlus.CommandsNext.Converters
 
         static DiscordUserConverter()
         {
-            UserRegex = new Regex(@"<@\!?(\d+?)>", RegexOptions.ECMAScript);
+            UserRegex = new Regex(@"<@\!?(\d+?)>");
         }
 
         public bool TryConvert(string value, CommandContext ctx, out DiscordUser result)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
+            if (ulong.TryParse(value, out var uid))
             {
                 result = ctx.Client.GetUserAsync(uid).GetAwaiter().GetResult();
                 return true;
             }
 
             var m = UserRegex.Match(value);
-            if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
+            if (m.Success && ulong.TryParse(m.Groups[1].Value, out uid))
             {
                 result = ctx.Client.GetUserAsync(uid).GetAwaiter().GetResult();
                 return true;
             }
 
-            var di = value.ToLowerInvariant().IndexOf('#');
+            var di = value.ToLower().IndexOf('#');
             var un = di != -1 ? value.Substring(0, di) : value;
             var dv = di != -1 ? value.Substring(di + 1) : null;
 
             var us = ctx.Client.Guilds
                 .SelectMany(xkvp => xkvp.Value.Members)
-                .Where(xm => xm.Username.ToLowerInvariant() == un && ((dv != null && xm.Discriminator == dv) || dv == null));
+                .Where(xm => xm.Username.ToLower() == un && ((dv != null && xm.Discriminator == dv) || dv == null));
 
             if (us.Any())
             {
@@ -54,30 +53,30 @@ namespace DSharpPlus.CommandsNext.Converters
 
         static DiscordMemberConverter()
         {
-            UserRegex = new Regex(@"<@\!?(\d+?)>", RegexOptions.ECMAScript);
+            UserRegex = new Regex(@"<@\!?(\d+?)>");
         }
 
         public bool TryConvert(string value, CommandContext ctx, out DiscordMember result)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
+            if (ulong.TryParse(value, out var uid))
             {
                 result = ctx.Guild.GetMemberAsync(uid).GetAwaiter().GetResult();
                 return true;
             }
 
             var m = UserRegex.Match(value);
-            if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
+            if (m.Success && ulong.TryParse(m.Groups[1].Value, out uid))
             {
                 result = ctx.Guild.GetMemberAsync(uid).GetAwaiter().GetResult();
                 return true;
             }
 
-            var di = value.ToLowerInvariant().IndexOf('#');
+            var di = value.ToLower().IndexOf('#');
             var un = di != -1 ? value.Substring(0, di) : value;
             var dv = di != -1 ? value.Substring(di + 1) : null;
 
             var us = ctx.Guild.Members
-                .Where(xm => (xm.Username.ToLowerInvariant() == un && ((dv != null && xm.Discriminator == dv) || dv == null)) || xm.Nickname?.ToLowerInvariant() == value);
+                .Where(xm => (xm.Username.ToLower() == un && ((dv != null && xm.Discriminator == dv) || dv == null)) || xm.Nickname?.ToLower() == value);
 
             if (us.Any())
             {
@@ -96,19 +95,19 @@ namespace DSharpPlus.CommandsNext.Converters
 
         static DiscordChannelConverter()
         {
-            ChannelRegex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
+            ChannelRegex = new Regex(@"<#(\d+)>");
         }
 
         public bool TryConvert(string value, CommandContext ctx, out DiscordChannel result)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid))
+            if (ulong.TryParse(value, out var cid))
             {
                 result = ctx.Guild.Channels.FirstOrDefault(xc => xc.Id == cid);
                 return true;
             }
 
             var m = ChannelRegex.Match(value);
-            if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out cid))
+            if (m.Success && ulong.TryParse(m.Groups[1].Value, out cid))
             {
                 result = ctx.Guild.Channels.FirstOrDefault(xc => xc.Id == cid);
                 return true;
@@ -126,19 +125,19 @@ namespace DSharpPlus.CommandsNext.Converters
 
         static DiscordRoleConverter()
         {
-            RoleRegex = new Regex(@"<@&(\d+?)>", RegexOptions.ECMAScript);
+            RoleRegex = new Regex(@"<@&(\d+?)>");
         }
 
         public bool TryConvert(string value, CommandContext ctx, out DiscordRole result)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rid))
+            if (ulong.TryParse(value, out var rid))
             {
                 result = ctx.Guild.Roles.FirstOrDefault(xr => xr.Id == rid);
                 return true;
             }
 
             var m = RoleRegex.Match(value);
-            if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out rid))
+            if (m.Success && ulong.TryParse(m.Groups[1].Value, out rid))
             {
                 result = ctx.Guild.Roles.FirstOrDefault(xr => xr.Id == rid);
                 return true;
@@ -154,7 +153,7 @@ namespace DSharpPlus.CommandsNext.Converters
     {
         public bool TryConvert(string value, CommandContext ctx, out DiscordGuild result)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
+            if (ulong.TryParse(value, out var gid))
             {
                 return ctx.Client.Guilds.TryGetValue(gid, out result);
             }
@@ -174,7 +173,7 @@ namespace DSharpPlus.CommandsNext.Converters
     {
         public bool TryConvert(string value, CommandContext ctx, out DiscordMessage result)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var mid))
+            if (ulong.TryParse(value, out var mid))
             {
                 result = ctx.Channel.GetMessageAsync(mid).GetAwaiter().GetResult();
                 return true;
@@ -191,7 +190,7 @@ namespace DSharpPlus.CommandsNext.Converters
 
         static DiscordEmojiConverter()
         {
-            EmoteRegex = new Regex(@"<:([a-zA-Z0-9_]+?):(\d+?)>", RegexOptions.ECMAScript);
+            EmoteRegex = new Regex(@"<:([a-zA-Z0-9_]+?):(\d+?)>");
         }
 
         public bool TryConvert(string value, CommandContext ctx, out DiscordEmoji result)
@@ -205,7 +204,7 @@ namespace DSharpPlus.CommandsNext.Converters
             var m = EmoteRegex.Match(value);
             if (m.Success)
             {
-                var id = ulong.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture);
+                var id = ulong.Parse(m.Groups[2].Value);
                 result = DiscordEmoji.FromGuildEmote(ctx.Client, id);
                 return true;
             }

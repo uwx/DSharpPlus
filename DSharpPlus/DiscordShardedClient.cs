@@ -10,7 +10,6 @@ using DSharpPlus.Net.Udp;
 using DSharpPlus.Net;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
-using System.Globalization;
 
 namespace DSharpPlus
 {
@@ -589,7 +588,7 @@ namespace DSharpPlus
         public async Task StartAsync()
         {
             var shardc = await this.InitializeShardsAsync();
-            this.DebugLogger.LogMessage(LogLevel.Info, "Autoshard", $"Booting {shardc.ToString(CultureInfo.InvariantCulture)} shards", DateTime.Now);
+            this.DebugLogger.LogMessage(LogLevel.Info, "Autoshard", $"Booting {shardc} shards", DateTime.Now);
 
             for (var i = 0; i < shardc; i++)
             {
@@ -649,7 +648,7 @@ namespace DSharpPlus
                 client.DebugLogger.LogMessageReceived += this.DebugLogger_LogMessageReceived;
                 
                 await client.ConnectAsync();
-                this.DebugLogger.LogMessage(LogLevel.Info, "Autoshard", $"Booted shard {i.ToString(CultureInfo.InvariantCulture)}", DateTime.Now);
+                this.DebugLogger.LogMessage(LogLevel.Info, "Autoshard", $"Booted shard {i}", DateTime.Now);
 
                 if (this._current_user == null)
                     this._current_user = client.CurrentUser;

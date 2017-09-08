@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -53,10 +52,10 @@ namespace DSharpPlus.Net.Abstractions
         [JsonIgnore]
         public ulong? ApplicationId
         {
-            get { return this.ApplicationIdStr != null ? (ulong?)ulong.Parse(this.ApplicationIdStr, CultureInfo.InvariantCulture) : null; }
+            get { return this.ApplicationIdStr != null ? (ulong?)ulong.Parse(this.ApplicationIdStr) : null; }
             internal set
             {
-                this.ApplicationIdStr = value?.ToString(CultureInfo.InvariantCulture);
+                this.ApplicationIdStr = value != null ? value.Value.ToString() : null;
             }
         }
 
@@ -122,7 +121,7 @@ namespace DSharpPlus.Net.Abstractions
             {
                 this.Party = new GameParty
                 {
-                    Id = game.PartyId?.ToString(CultureInfo.InvariantCulture)
+                    Id = game.PartyId?.ToString()
                 };
 
                 if (game.CurrentPartySize != null && game.MaximumPartySize != null)
@@ -169,10 +168,10 @@ namespace DSharpPlus.Net.Abstractions
             [JsonIgnore]
             public ulong LargeImage
             {
-                get { return ulong.Parse(this.LargeImageStr, CultureInfo.InvariantCulture); }
+                get { return ulong.Parse(this.LargeImageStr); }
                 internal set
                 {
-                    this.LargeImageStr = value.ToString(CultureInfo.InvariantCulture);
+                    this.LargeImageStr = value.ToString();
                 }
             }
             
@@ -191,10 +190,10 @@ namespace DSharpPlus.Net.Abstractions
             [JsonIgnore]
             public ulong SmallImage
             {
-                get { return ulong.Parse(this.SmallImageStr, CultureInfo.InvariantCulture); }
+                get { return ulong.Parse(this.SmallImageStr); }
                 internal set
                 {
-                    this.SmallImageStr = value.ToString(CultureInfo.InvariantCulture);
+                    this.SmallImageStr = value.ToString();
                 }
             }
 

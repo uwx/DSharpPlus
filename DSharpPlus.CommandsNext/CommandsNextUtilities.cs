@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -23,7 +22,7 @@ namespace DSharpPlus.CommandsNext
 
         static CommandsNextUtilities()
         {
-            UserRegex = new Regex(@"<@\!?(\d+?)> ", RegexOptions.ECMAScript);
+            UserRegex = new Regex(@"<@\!?(\d+?)> ");
 
             ArgumentConverters = new Dictionary<Type, IArgumentConverter>
             {
@@ -131,7 +130,7 @@ namespace DSharpPlus.CommandsNext
             if (!m.Success)
                 return -1;
 
-            var uid = ulong.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture);
+            var uid = ulong.Parse(m.Groups[1].Value);
             if (user.Id != uid)
                 return -1;
 

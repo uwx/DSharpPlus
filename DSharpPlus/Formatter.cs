@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using DSharpPlus.Entities;
 
@@ -10,8 +9,8 @@ namespace DSharpPlus
     /// </summary>
     public static class Formatter
     {
-        private static Regex MdSanitizeRegex { get; } = new Regex(@"([`\*_~<>\[\]\(\)""@\!\&#:])", RegexOptions.ECMAScript);
-        private static Regex MdStripRegex { get; } = new Regex(@"([`\*_~\[\]\(\)""]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)", RegexOptions.ECMAScript);
+        private static Regex MdSanitizeRegex { get; } = new Regex(@"([`\*_~<>\[\]\(\)""@\!\&#:])");
+        private static Regex MdStripRegex { get; } = new Regex(@"([`\*_~\[\]\(\)""]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)");
 
         /// <summary>
         /// Creates a block of code.
@@ -95,27 +94,27 @@ namespace DSharpPlus
         /// <param name="user">User to create mention for.</param>
         /// <param name="nickname">Whether the mention should resovle nicknames or not.</param>
         /// <returns>Formatted mention.</returns>
-        public static string Mention(DiscordUser user, bool nickname = false) => (nickname ? $"<@!{user.Id.ToString(CultureInfo.InvariantCulture)}>" : $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>");
+        public static string Mention(DiscordUser user, bool nickname = false) => (nickname ? $"<@!{user.Id}>" : $"<@{user.Id}>");
 
         /// <summary>
         /// Creates a mention for specified channel.
         /// </summary>
         /// <param name="channel">Channel to mention.</param>
         /// <returns>Formatted mention.</returns>
-        public static string Mention(DiscordChannel channel) => $"<#{channel.Id.ToString(CultureInfo.InvariantCulture)}>";
+        public static string Mention(DiscordChannel channel) => $"<#{channel.Id}>";
 
         /// <summary>
         /// Creates a mention for specified role.
         /// </summary>
         /// <param name="role">Role to mention.</param>
         /// <returns>Formatted mention.</returns>
-        public static string Mention(DiscordRole role) => $"<@&{role.Id.ToString(CultureInfo.InvariantCulture)}>";
+        public static string Mention(DiscordRole role) => $"<@&{role.Id}>";
 
         /// <summary>
         /// Creates a custom emoji string.
         /// </summary>
         /// <param name="emoji">Emoji to display.</param>
         /// <returns>Formatted emoji.</returns>
-        public static string Emoji(DiscordEmoji emoji) => $"<:{emoji.Name}:{emoji.Id.ToString(CultureInfo.InvariantCulture)}>";
+        public static string Emoji(DiscordEmoji emoji) => $"<:{emoji.Name}:{emoji.Id}>";
     }
 }
