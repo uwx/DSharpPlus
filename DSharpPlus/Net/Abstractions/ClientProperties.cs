@@ -26,42 +26,36 @@ namespace DSharpPlus.Net.Abstractions
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return "osx";
 
-                var plat = RuntimeInformation.OSDescription.ToLower();
+                var plat = RuntimeInformation.OSDescription.ToLowerInvariant();
 #else
-                switch (Environment.OSVersion.Platform)
-                {
-                    case PlatformID.Win32NT:
-                    case PlatformID.WinCE:
-                        return "windows";
-                    case PlatformID.MacOSX:
-                        return "osx";
-                    case PlatformID.Win32S:
-                    case PlatformID.Win32Windows:
-                    case PlatformID.Xbox:
-                        return "potato";
-                    case PlatformID.Unix:
-                        return "unix";
-                }
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.WinCE)
+                    return "windows";
+                else if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+                    return "osx";
+                else if (Environment.OSVersion.Platform == PlatformID.Win32S || Environment.OSVersion.Platform == PlatformID.Win32Windows || Environment.OSVersion.Platform == PlatformID.Xbox)
+                    return "potato";
+                else if (Environment.OSVersion.Platform == PlatformID.Unix)
+                    return "unix";
 
                 var plat = Environment.OSVersion.VersionString;
 #endif
                 if (plat.Contains("freebsd"))
                     return "freebsd";
-                if (plat.Contains("openbsd"))
+                else if (plat.Contains("openbsd"))
                     return "openbsd";
-                if (plat.Contains("netbsd"))
+                else if (plat.Contains("netbsd"))
                     return "netbsd";
-                if (plat.Contains("dragonfly"))
+                else if (plat.Contains("dragonfly"))
                     return "dragonflybsd";
-                if (plat.Contains("miros bsd") || plat.Contains("mirbsd"))
+                else if (plat.Contains("miros bsd") || plat.Contains("mirbsd"))
                     return "miros bsd";
-                if (plat.Contains("desktopbsd"))
+                else if (plat.Contains("desktopbsd"))
                     return "desktopbsd";
-                if (plat.Contains("darwin"))
+                else if (plat.Contains("darwin"))
                     return "osx";
-                if (plat.Contains("unix"))
+                else if (plat.Contains("unix"))
                     return "unix";
-                return "toaster (unknown)";
+                else return "toaster (unknown)";
             }
         }
 
