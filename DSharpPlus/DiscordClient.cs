@@ -975,7 +975,7 @@ namespace DSharpPlus
                     break;
 
                 case GatewayOpCode.Hello:
-                    await OnHelloAsync((payload.Data as JObject).ToObject<GatewayHello>());
+                    await OnHelloAsync((payload.Data as JObject)?.ToObject<GatewayHello>());
                     break;
 
                 case GatewayOpCode.HeartbeatAck:
@@ -2176,6 +2176,9 @@ namespace DSharpPlus
 
         internal async Task OnHelloAsync(GatewayHello hello)
         {
+            if (hello == null)
+                throw new InvalidDataException("Gateway hello was null, likely it was in invalid type");
+            
             this.DebugLogger.LogMessage(LogLevel.Debug, "Websocket", "Received OP 10 (HELLO) - Trying to either resume or identify", DateTime.Now);
             //this._waiting_for_ack = false;
             Interlocked.CompareExchange(ref this._skipped_heartbeats, 0, 0);
