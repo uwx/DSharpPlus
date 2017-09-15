@@ -705,7 +705,7 @@ namespace DSharpPlus
                 {
                     throw new Exception("Authentication failed. Check your token and try again.", e);
                 }
-                catch (PlatformNotSupportedException e)
+                catch (PlatformNotSupportedException)
                 {
                     throw;
                 }
