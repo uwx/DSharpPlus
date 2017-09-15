@@ -707,7 +707,7 @@ namespace DSharpPlus
                 }
                 catch (PlatformNotSupportedException e)
                 {
-                    throw e;
+                    throw;
                 }
                 catch (Exception ex)
                 {
@@ -996,7 +996,7 @@ namespace DSharpPlus
             ulong gid;
             ulong cid;
             DiscordUser usr;
-            
+
             switch (payload.EventName.ToLowerInvariant())
             {
                 case "ready":
