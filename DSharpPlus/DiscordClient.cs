@@ -2192,10 +2192,12 @@ namespace DSharpPlus
                 await SendResumeAsync();
 
 #pragma warning disable CS4014
+            // ReSharper disable MethodSupportsCancellation
             Task.Delay(5100).ContinueWith(t =>
             {
                 ConnectionSemaphore.Release();
             }).ConfigureAwait(false);
+            // ReSharper restore MethodSupportsCancellation
 #pragma warning restore CS4014
         }
 
