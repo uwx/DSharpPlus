@@ -997,7 +997,6 @@ namespace DSharpPlus
             ulong cid;
             DiscordUser usr;
             
-            Console.WriteLine(dat.ToString());
 
             switch (payload.EventName.ToLowerInvariant())
             {
