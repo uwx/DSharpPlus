@@ -100,7 +100,7 @@ namespace DSharpPlus.Entities
         /// <returns>String representation of this color.</returns>
         public override string ToString()
         {
-            return $"#{this.Value.ToString("X6")}";
+            return $"#{this.Value:X6}";
         }
     }
 }

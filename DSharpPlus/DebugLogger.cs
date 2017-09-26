@@ -51,7 +51,7 @@ namespace DSharpPlus
                     break;
             }
 
-            Console.Write($"[{e.Timestamp.ToString("yyyy-MM-dd HH:mm:ss zzz")}] [{e.Application}] [{e.Level}]");
+            Console.Write($"[{e.Timestamp:yyyy-MM-dd HH:mm:ss zzz}] [{e.Application}] [{e.Level}]");
             Console.ResetColor();
             Console.WriteLine($" {e.Message}");
 #endif
@@ -87,7 +87,7 @@ namespace DSharpPlus
 
             public override string ToString()
             {
-                return $"[{Timestamp.ToString("yyyy-MM-dd HH:mm:ss zzz")}] [{Application}] [{Level}] {Message}";
+                return $"[{Timestamp:yyyy-MM-dd HH:mm:ss zzz}] [{Application}] [{Level}] {Message}";
             }
         }
     }
