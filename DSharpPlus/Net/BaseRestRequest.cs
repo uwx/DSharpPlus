@@ -12,7 +12,7 @@ namespace DSharpPlus.Net
     {
         protected internal BaseDiscordClient Discord { get; }
         protected internal TaskCompletionSource<RestResponse> RequestTaskSource { get; }
-
+        
         /// <summary>
         /// Gets the url to which this request is going to be made.
         /// </summary>

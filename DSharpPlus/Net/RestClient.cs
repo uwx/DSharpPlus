@@ -76,7 +76,7 @@ namespace DSharpPlus.Net
             var now = DateTimeOffset.UtcNow;
             if (bucket.Remaining <= 0 && bucket.Maximum > 0 && now < bucket.Reset)
             {
-                request.Discord.DebugLogger.LogMessage(LogLevel.Warning, "REST", $"Pre-emptive ratelimit triggered, waiting until {bucket.Reset.ToString("yyyy-MM-dd HH:mm:ss zzz")}", DateTime.Now);
+                request.Discord.DebugLogger.LogMessage(LogLevel.Warning, "REST", $"Pre-emptive ratelimit triggered, waiting until {bucket.Reset:yyyy-MM-dd HH:mm:ss zzz}", DateTime.Now);
                 _ = Task.Delay(bucket.Reset - now).ContinueWith(t => this.ExecuteRequestAsync(request));
                 this.RequestSemaphore.Release();
                 return;
@@ -123,6 +123,14 @@ namespace DSharpPlus.Net
                 case 429:
                     ex = new RateLimitException(request, response);
 
+                    if (request is BulldozerRestRequest dozerRequest)
+                    {
+                        ProcessBulldozerRequest(request, dozerRequest, ex, response);
+                        //this.UpdateBucket(request, response);
+                        this.RequestSemaphore.Release();
+                        return;
+                    }
+
                     // check the limit info, if more than one minute, fault, otherwise requeue
                     this.Handle429(response, out var wait, out var global);
                     if (wait != null)
@@ -148,6 +156,39 @@ namespace DSharpPlus.Net
                 request.SetFaulted(ex);
             else
                 request.SetCompleted(response);
+        }
+
+        private void ProcessBulldozerRequest(BaseRestRequest request, BulldozerRestRequest dozerRequest, Exception ex,
+            RestResponse response)
+        {
+            var retryDelay = TimeSpan.FromSeconds(dozerRequest.RetryDelay);
+            var delayWhen = (DateTime.Now + retryDelay).ToString("yyyy-MM-dd HH:mm:ss zzz");
+            switch (dozerRequest.RetryDelay)
+            {
+                case 64:
+                    request.Discord.DebugLogger.LogMessage(LogLevel.Warning, "REST",
+                        $"Bulldozer request failed 6 times, will halt if it fails again! Next retry in {retryDelay} seconds ({delayWhen})",
+                        DateTime.Now);
+                    break;
+                case 128:
+                    request.Discord.DebugLogger.LogMessage(LogLevel.Error, "REST",
+                        "Bulldozer request has failed 7 times and will halt.", DateTime.Now);
+                    // FIXME do i need this??
+                    //this.UpdateBucket(request, response);
+                    this.RequestSemaphore.Release();
+                    request.SetFaulted(ex);
+                    return;
+                default:
+                    request.Discord.DebugLogger.LogMessage(LogLevel.Info, "REST",
+                        $"Bulldozer request caught a 429, retrying in {retryDelay} seconds ({delayWhen})", DateTime.Now);
+                    break;
+            }
+
+            _ = Task.Delay(retryDelay).ContinueWith(t =>
+            {
+                dozerRequest.RetryDelay *= 2;
+                return this.ExecuteRequestAsync(request);
+            });
         }
 
         private HttpRequestMessage BuildRequest(BaseRestRequest request)
