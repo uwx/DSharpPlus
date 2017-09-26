@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace DSharpPlus.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Represents a non-multipart HTTP request.
     /// </summary>
