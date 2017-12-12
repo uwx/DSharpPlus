@@ -108,13 +108,6 @@ namespace DSharpPlus.Entities
             => guild.UnbanMemberAsync(this, reason);
             
         /// <summary>
-        /// Creates a DM channel for this user.
-        /// </summary>
-        /// <returns>Task resolving to the newly created DM channel.</returns>
-        public Task<DiscordDmChannel> CreateDmAsync() 
-            => this.Discord.CreateDmAsync(this);
-
-        /// <summary>
         /// Gets this user's presence.
         /// </summary>
         [JsonIgnore]
