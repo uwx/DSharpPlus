@@ -2239,10 +2239,10 @@ namespace DSharpPlus
 
             var route = Endpoints.GATEWAY;
             if (Configuration.TokenType == TokenType.Bot)
-                route = string.Concat(route, Endpoints.BOT);
+                route += Endpoints.BOT;
             var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
-            var url = new Uri(string.Concat(Utilities.GetApiBaseUri(), path));
+            var url = new Uri($"{Utilities.GetApiBaseUri()}{path}");
             var request = new RestRequest(this, bucket, url, RestRequestMethod.GET, headers);
             _ = this.ApiClient.Rest.ExecuteRequestAsync(request);
             var response = await request.WaitForCompletionAsync().ConfigureAwait(false);
