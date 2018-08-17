@@ -250,8 +250,8 @@ namespace DSharpPlus.Net.Abstractions
             var arr = ReadArrayObject(reader, serializer);
             return new TransportActivity.GameParty.GamePartySize
             {
-                Current = (int)(long)arr[0],
-                Maximum = (int)(long)arr[1],
+                Current = unchecked((int)(long)arr[0]),
+                Maximum = unchecked((int)(long)arr[1]),
             };
         }
 
