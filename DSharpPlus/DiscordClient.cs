@@ -846,7 +846,7 @@ namespace DSharpPlus
                     channel._recipients.Add(xu);
                 }
 
-                this._privateChannels.TryAdd(channel.Id, channel);
+                this._privateChannels[channel.Id] = channel;
             }
 
             this._guilds.Clear();
@@ -900,8 +900,7 @@ namespace DSharpPlus
                             return old;
                         });
 
-                        guild._members.TryAdd(xtm.User.Id,
-                            new DiscordMember(xtm) {Discord = this, _guild_id = guild.Id});
+                        guild._members[xtm.User.Id] = new DiscordMember(xtm) {Discord = this, _guild_id = guild.Id};
                     }
                 }
 
@@ -917,7 +916,7 @@ namespace DSharpPlus
                 foreach (var xvs in guild.VoiceStates)
                     xvs.Discord = this;
 
-                this._guilds.TryAdd(guild.Id, guild);
+                this._guilds[guild.Id] = guild;
             }
 
             if (this.Configuration.TokenType == TokenType.User && this.Configuration.AutomaticGuildSync)
@@ -946,7 +945,7 @@ namespace DSharpPlus
                     .Select(xtu => this.InternalGetCachedUser(xtu.Id) ?? new DiscordUser(xtu) { Discord = this });
                 dmChannel._recipients = recips.ToList();
 
-                _privateChannels.TryAdd(dmChannel.Id, dmChannel);
+                _privateChannels[dmChannel.Id] = dmChannel;
 
                 await this._dmChannelCreated.InvokeAsync(new DmChannelCreateEventArgs(this) { Channel = dmChannel }).ConfigureAwait(false);
             }
@@ -1185,7 +1184,7 @@ namespace DSharpPlus
                 guild_old._emojis.AddRange(gld._emojis);
                 guild_old._roles.AddRange(gld._roles);
                 guild_old._voice_states.AddRange(gld._voice_states);
-                foreach (var kvp in gld._members) guild_old._members.TryAdd(kvp.Key, kvp.Value);
+                foreach (var kvp in gld._members) guild_old._members[kvp.Key] = kvp.Value;
             }
 
             guild.Discord = this;
@@ -1431,7 +1430,7 @@ namespace DSharpPlus
                 _guild_id = guild.Id
             };
 
-            guild._members.TryAdd(mbr.Id, mbr);
+            guild._members[mbr.Id] = mbr;
             guild.MemberCount++;
 
             var ea = new GuildMemberAddEventArgs(this)
@@ -1901,7 +1900,7 @@ namespace DSharpPlus
             foreach (var xtm in members)
             {
                 var mbr = new DiscordMember(xtm) { Discord = this, _guild_id = guild.Id };
-                guild._members.TryAdd(mbr.Id, mbr);
+                guild._members[mbr.Id] = mbr;
                 mbrs.Add(mbr);
             }
             guild.MemberCount = guild._members.Count;
@@ -2320,7 +2319,7 @@ namespace DSharpPlus
                         return old;
                     });
 
-                    guild._members.TryAdd(xtm.User.Id, new DiscordMember(xtm) { Discord = this, _guild_id = guild.Id });
+                    guild._members[xtm.User.Id] = new DiscordMember(xtm) { Discord = this, _guild_id = guild.Id };
                 }
             }
 
