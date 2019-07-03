@@ -556,9 +556,6 @@ namespace DSharpPlus.Entities
         /// <returns>Calculated permissions for a given member.</returns>
         public Permissions PermissionsFor(DiscordMember mbr)
         {
-            // default permissions
-            const Permissions def = Permissions.None;
-            
             // future note: might be able to simplify @everyone role checks to just check any role ... but i'm not sure
             // xoxo, ~uwx
             //
@@ -572,10 +569,10 @@ namespace DSharpPlus.Entities
             // thanks to meew0
 
             if (this.IsPrivate || this.Guild == null)
-                return def;
+                return Permissions.None;
 
             if (this.Guild.OwnerId == mbr.Id)
-                return ~def;
+                return PermissionMethods.FULL_PERMS;
 
             Permissions perms;
 
@@ -592,7 +589,7 @@ namespace DSharpPlus.Entities
                 .ToList();
 
             // assign permissions from member's roles (in order)
-            perms |= mbRoles.Aggregate(def, (c, role) => c | role.Permissions);
+            perms |= mbRoles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
             
             // assign channel permission overwrites for @everyone pseudo-role
             var everyoneOverwrites = this._permission_overwrites.FirstOrDefault(xo => xo.Id == everyoneRole.Id);
@@ -603,9 +600,9 @@ namespace DSharpPlus.Entities
             }
 
             // assign channel permission overwrites for member's roles (explicit deny)
-            perms &= ~mbRoleOverrides.Aggregate(def, (c, overs) => c | overs.Denied);
+            perms &= ~mbRoleOverrides.Aggregate(Permissions.None, (c, overs) => c | overs.Denied);
             // assign channel permission overwrites for member's roles (explicit allow)
-            perms |= mbRoleOverrides.Aggregate(def, (c, overs) => c | overs.Allowed);
+            perms |= mbRoleOverrides.Aggregate(Permissions.None, (c, overs) => c | overs.Allowed);
 
             // channel overrides for just this member
             var mbOverrides = this._permission_overwrites.FirstOrDefault(xo => xo.Id == mbr.Id);
